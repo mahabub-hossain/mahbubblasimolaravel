@@ -44,6 +44,24 @@ class PermissionController extends Controller
         return response()->json($permission);
     }
 
+    public function details(Request $request){
+        if($request->type=='show'){
+            $perByid = Permission::find($request->id);
+            return response()->json($perByid);
+        }else{
+            $perByid = Permission::find($request->id);
+            return response()->json($perByid);
+        }
+    }
+    public function roleUpdate(Request $request){
+        $permission = Permission::find($request->id);
+        $permission->name = $request->name;
+        $permission->permission_for = $request->permission_for;
+        $permission->save();
+        return response()->json($permission);
+    }
+
+    
     /**
      * Display the specified resource.
      *

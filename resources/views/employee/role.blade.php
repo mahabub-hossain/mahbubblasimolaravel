@@ -21,7 +21,7 @@
                     <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                        <div class="card-title">
-                        <div class="preview"> <i class="icon-people"></i>Add Role branch name</div>
+                        <div class="preview"> <i class="icon-people"></i>Add Role</div>
                        </div>
                         <div class="card-body">
                           {!!Form::open(['method' => 'POST', 'id'=>'role','class'=>'forms-sample'])!!}
@@ -74,7 +74,9 @@
                                        <div class="card-body">
                                           <div class="form-group">
                                             <label for="exampleInputName1">Role Name</label>
-                                            <input type="text" id="name" name="name" class="form-control" id="exampleInputName1">
+                                            <input type="text" id="name" name="name" class="form-control" required>
+                                            <input type="hidden" id="id" name="id" class="form-control">
+                                            <input type="hidden" id="si" class="form-control">
                                             </div>
                                             <div class="form-group">
                                                 <label for="exampleInputName1">Permissions For This Role</label>
@@ -85,7 +87,7 @@
                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-success">Submit</button>
+                                  <button type="submit" class="btn btn-success">Submit</button>
                                   <button type="button" class="btn btn-danger btn-fw" data-dismiss="modal">Cancel</button>
                                 </div>
                                 {!! Form::close() !!}
@@ -128,13 +130,13 @@
                                 <tbody id="roleappend">
                                     @foreach ($roleList as $item)
                                 <tr class="unqrole{{$item->id}}">
-                                      <td>{{$loop->index + 1}}</td>
+                                      <td class="si">{{$loop->index + 1}}</td>
                                         <td>{{$item->name}}</td>
                                         <td>{{$item->created_at}}</td>
                                         <td>
                                           <button class="btn btn-outline-primary roleshow" data-id="{{$item->id}}" data-toggle="modal" data-target="#exampleModal1"><i class="ti-arrow-circle-right"></i></button>
-                                          <button type="button" class="btn btn-outline-success editrole" data-rolename="{{$item->name}}" data-id="{{$item->id}}" data-toggle="modal" data-target="#exampleModal"><i class="icon-pencil"></i></button>
-                                          <button type="button" class="btn btn-outline-danger btn-icon-text custombtn">
+                                          <button type="button" data-serial="{{$loop->index + 1}}" class="btn btn-outline-success editrole" data-rolename="{{$item->name}}" data-id="{{$item->id}}" data-toggle="modal" data-target="#exampleModal"><i class="icon-pencil"></i></button>
+                                          <button type="button" data-id="{{$item->id}}" class="btn btn-outline-danger btn-icon-text deleterole">
                                             <i class="icon-trash"></i>                                                       
                                           </button>
                                         </td>
@@ -147,7 +149,7 @@
                           </div>
                         </div>
                       </div>
-                </div>
+                  </div>
                 </div>
             </div>
             </div>
@@ -159,6 +161,7 @@
     <link rel="stylesheet" href="{{asset('vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}" />
     <link rel="stylesheet" href="{{asset('vendors/simple-line-icons/css/simple-line-icons.css')}}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@7.33.1/dist/sweetalert2.min.css" />
 
 @endpush
 @push('scripts')
@@ -168,13 +171,15 @@
     <script src="{{asset('vendors/jquery-validation/jquery.validate.min.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{{asset('js/modal-demo.js')}}"></script>
-
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+<script>
       // global app configuration object
       var config = {
           routes: {
               rolestore: "{!! route('roles.store') !!}",
               roleshow: "{!! route('roles.details') !!}",
+              roleupdate: "{!! route('roles.roleupdate') !!}",
+              roledelete: "{!! route('roles.delete') !!}",
           }
       };
       </script>
