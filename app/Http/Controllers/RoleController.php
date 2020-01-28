@@ -24,9 +24,6 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        // $roles = Role::orderBy('id','DESC')->paginate(5);
-        // return view('roles.index',compact('roles'))
-        //     ->with('i', ($request->input('page', 1) - 1) * 5);
          $role_for = DB::select(DB::raw("SELECT id,name,permission_for from permissions"));
          $newArr = [];
         foreach ($role_for as $role_permission){
@@ -35,7 +32,6 @@ class RoleController extends Controller
             $newArr[$role_permission->permission_for][$role_permission->id]['per_id'] = $role_permission->id;
             $newArr[$role_permission->permission_for][$role_permission->id]['per_name'] = $role_permission->permission_for;
         }
-        //dd($newArr);
         $roleList = Role::all();
         return view('employee.role',compact('newArr','roleList'));
     }
@@ -67,10 +63,6 @@ class RoleController extends Controller
         ]);
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
-
-
-        // return redirect()->route('roles.index')
-        //                 ->with('success','Role created successfully');
         return response()->json($role);
     }
     public function details(Request $request){
@@ -81,44 +73,52 @@ class RoleController extends Controller
                 ->where("role_has_permissions.role_id",$id)
                 ->get();      
             return response()->json(['role'=>$role,'rolepermission'=>$rolePermissions]);
-           }else{
+        }else{
             $role = Role::find($id);
             $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
                 ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
                 ->all();
             $role_for = DB::select(DB::raw("SELECT id,name,permission_for from permissions"));
-                $newArr = [];
-               foreach ($role_for as $role_permission){
-       
-                   $newArr[$role_permission->permission_for][$role_permission->id]['role_name'] = $role_permission->name;
-                   $newArr[$role_permission->permission_for][$role_permission->id]['per_id'] = $role_permission->id;
-                   $newArr[$role_permission->permission_for][$role_permission->id]['per_name'] = $role_permission->permission_for;
-               }
-            $check ="checked";
-               $result = '';
-               foreach( $newArr as  $rolefor=>$permissions){
-                $result .= '<div class="col-sm-6 col-md-4 col-lg-3">
-                            <span>'.$rolefor.'</span><br><br>';
-                                foreach($permissions as $perid=>$permissionDetail){
-                                    $result .='<div class="form-check form-check-success">
-                                    <label class="form-check-label">';
-                                    if(in_array($permissionDetail["per_id"], $rolePermissions)){
-                                        $result .='<input type="checkbox" name="permission[]" id="permissionchk" value="'.$permissionDetail["per_id"].'"  class="form-check-input" checked>';
-                                    }else{
-                                        $result .='<input type="checkbox" name="permission[]" id="permissionchk" value="'.$permissionDetail["per_id"].'"  class="form-check-input">';
+            $newArr = [];
+            foreach ($role_for as $role_permission){
+                $newArr[$role_permission->permission_for][$role_permission->id]['role_name'] = $role_permission->name;
+                $newArr[$role_permission->permission_for][$role_permission->id]['per_id'] = $role_permission->id;
+                $newArr[$role_permission->permission_for][$role_permission->id]['per_name'] = $role_permission->permission_for;
+            }
+            $result = '';
+            foreach( $newArr as  $rolefor=>$permissions){
+            $result .= '<div class="col-sm-6 col-md-4 col-lg-3">
+                        <span>'.$rolefor.'</span><br><br>';
+                        foreach($permissions as $perid=>$permissionDetail){
+                            $result .='<div class="form-check form-check-success">
+                            <label class="form-check-label">';
+                            if(in_array($permissionDetail["per_id"], $rolePermissions)){
+                                $result .='<input type="checkbox" name="permission[]" id="permissionchk" value="'.$permissionDetail["per_id"].'"  class="form-check-input" checked>';
+                            }else{
+                                $result .='<input type="checkbox" name="permission[]" id="permissionchk" value="'.$permissionDetail["per_id"].'"  class="form-check-input">';
 
-                                    }
-                                    $result .= $permissionDetail["role_name"].'
-                                    <i class="input-helper"></i></label>
-                                    </div>';
-                                }  
-                                $result .='</div>';
-
-               }
-               //return response()->json(['result'=>$result]);
-               echo $result;
-
-           }
+                            }
+                            $result .= $permissionDetail["role_name"].'
+                            <i class="input-helper"></i></label>
+                            </div>';
+                        }  
+                        $result .='</div>';
+            }
+            echo $result;
+        }
+    }
+    public function roleUpdate(Request $request){
+        $role = Role::find($request->id);
+        $role->name = $request->name;
+        $role->save();
+        $role->syncPermissions($request->input('permission'));
+        return response()->json($role);
+    }
+    public function roleDelete(Request $request){
+        //DB::table("roles")->where('id',$request->$id)->delete();
+        $delItem = Role::find($request->id);
+        $delItem->delete();
+        return response()->json($request->id);
     }
     /**
      * Display the specified resource.

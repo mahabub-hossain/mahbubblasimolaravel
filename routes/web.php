@@ -31,10 +31,17 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix' => 'ceo','middleware' => ['auth']], function() {
+    //Role
     Route::resource('roles','RoleController');
     Route::get('roles-details','RoleController@details')->name('roles.details');
+    Route::post('roles-update','RoleController@roleUpdate')->name('roles.roleupdate');
+    Route::get('roles-delete','RoleController@roleDelete')->name('roles.delete');
     Route::resource('users','UserController');
     Route::resource('products','ProductController');
     Route::resource('permisssion','PermissionController');
+    //Permission
+    Route::get('permission-details','PermissionController@details')->name('permisssion.showPermission');
+    Route::post('permission-update','PermissionController@roleUpdate')->name('permisssion.permissionUpdate');
+
 });
 

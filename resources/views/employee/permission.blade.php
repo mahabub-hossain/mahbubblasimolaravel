@@ -57,6 +57,67 @@
                         <div class="preview"> <i class="icon-people"></i>Permission List </div>
                        </div>
                         <div class="card-body">
+                          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-md" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Edit Permission</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                {!!Form::open(['method' => 'POST', 'id'=>'permissionedit'])!!}
+                                <div class="modal-body">
+                                  <div class="col-12 grid-margin stretch-card">
+                                       <div class="card-body">
+                                          <div class="form-group">
+                                            <label for="exampleInputName1">Permission Name</label>
+                                            <input type="text" id="name" name="name" class="form-control" required>
+                                            <input type="hidden" id="id" name="id" class="form-control">
+                                            <input type="hidden" id="si" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                              <label for="exampleInputName1">Permission For</label><br>
+                                              <select class="js-example-basic-single w-100 form-control" id="permission_for" name="permission_for" style="width: 100%">
+                                                <option value="User">User</option>
+                                                <option value="Role">Role</option>
+                                                <option value="Departmen">Departmen</option>
+                                                <option value="Designation">Designation</option>
+                                                <option value="Team">Team</option>
+                                              </select>
+                                            </div>
+                                        </div>
+                                   </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="submit" class="btn btn-success">Submit</button>
+                                  <button type="button" class="btn btn-danger btn-fw" data-dismiss="modal">Cancel</button>
+                                </div>
+                                {!! Form::close() !!}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-md" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Permission Details</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <h5 class="role-dec">Permission Name</h5>
+                                  <h6 class="permission-name per_app"><h6>
+                                  <h5 class="role-dec">Permission For</h5>
+                                  <span class="permission-for per_app"></span>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-danger btn-fw" data-dismiss="modal">Cancel</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                           <div class="row">
                             <div class="col-12">
                               <div class="table-responsive">
@@ -71,12 +132,16 @@
                                   </thead>
                                   <tbody id="permissionappend">
                                     @foreach ($permissionList as $item)
-                                    <tr>
+                                  <tr class="unqpermission{{$item->id}}">
                                       <td>{{$loop->index +1}}</td>
                                       <td>{{$item->name}}</td>
                                       <td>{{$item->permission_for}}</td>                                                                               
                                       <td>
-                                        <button data-id="{{$item->id}}" class="btn btn-outline-primary">View</button>
+                                        <button data-id="{{$item->id}}" data-id="{{$item->id}}" class="btn btn-outline-primary permissionshow" data-toggle="modal" data-target="#exampleModal1">View</button>
+                                        <button type="button" data-serial="{{$loop->index + 1}}" class="btn btn-outline-success editpermission" data-permissionname="{{$item->name}}" data-id="{{$item->id}}" data-toggle="modal" data-target="#exampleModal"><i class="icon-pencil"></i></button>
+                                        <button type="button" data-id="{{$item->id}}" class="btn btn-outline-danger btn-icon-text deletepermission">
+                                          <i class="icon-trash"></i>                                                       
+                                        </button>
                                       </td>
                                   </tr> 
                                     @endforeach
@@ -115,6 +180,8 @@
     var config = {
         routes: {
             permissionstore: "{!! route('permisssion.store') !!}",
+            permissionsshow: "{!! route('permisssion.showPermission') !!}",
+            permissionupdate: "{!! route('permisssion.permissionUpdate') !!}",
         }
     };
     </script>
