@@ -21,7 +21,7 @@
                     <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                        <div class="card-title">
-                        <div class="preview"> <i class="icon-people"></i>Add Role</div>
+                        <div class="preview"> <i class="icon-people"></i>Add Role branch name</div>
                        </div>
                         <div class="card-body">
                           {!!Form::open(['method' => 'POST', 'id'=>'role','class'=>'forms-sample'])!!}
