@@ -1,0 +1,33 @@
+.auth-form-dark{
+  background-color:#00000073;
+}
+.auth-link {
+  color: #fff;
+}
+.table, .jsgrid .jsgrid-table {
+  color: #b6bdc3;
+}
+.preview i{
+  display: inline-block;
+    font-size: 20px;
+    width: 40px;
+    text-align: left;
+    color: #248afd;
+    padding-left: 13px;
+}
+.toast {  
+  background-color: rgb(113, 192, 22); 
+  color: #fff;
+}
+.per_app{
+  list-style: none;
+  display: inline-block;
+  padding: 5px 5px;
+  color: #0faf0f;
+}
+.role-dec{
+  color: #929414;
+}
+
+
+
